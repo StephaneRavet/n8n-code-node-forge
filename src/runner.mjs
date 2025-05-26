@@ -3,7 +3,6 @@ import vm from 'vm';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import stripJsonComments from 'strip-json-comments';
-import { WorkflowDataProxy } from 'n8n-workflow/dist/WorkflowDataProxy.js';
 import chalk from 'chalk';
 
 function logInfo(msg) {
