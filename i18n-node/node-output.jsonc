@@ -1,0 +1,69 @@
+[
+    {
+        "index": 0,
+        "message": {
+            "role": "assistant",
+            "content": {
+                // Sale order
+                "sale_order": {
+                    "name": "ACDE25-01771",
+                    "partner_id": 1,
+                    "date_order": "2025-03-19T00:00:00",
+                    "state": "draft",
+                    "pricelist_id": 1,
+                    "currency_id": 1
+                },
+                "sale_order_line": [
+                    {
+                        "order_id": 1,
+                        "product_id": 1,
+                        "name": "ANGULAR 18 ET VERSIONS ANTÉRIEURES - DÉVELOPPEMENT D'APPLICATIONS WEB",
+                        "product_uom_qty": 3,
+                        "price_unit": 650,
+                        "product_uom": 1,
+                        "discount": 0,
+                        "tax_id": []
+                    }
+                ],
+                "res_partner": [
+                    {
+                        "name": "M2I SCRIBTEL",
+                        "type": "invoice",
+                        "street": "101 av. Laurent Cély",
+                        "city": "Gennevilliers",
+                        "zip": "92230",
+                        "country_id": null,
+                        "supplier_rank": 1,
+                        "ref": "10110"
+                    }
+                ],
+                "res_partner_contact": [
+                    {
+                        "parent_id": 1,
+                        "name": "Roseline Bellen-Vizinho",
+                        "type": "contact",
+                        "function": "Interlocuteur",
+                        "email": "r.bellen-vizinho@m2iformation.fr",
+                        "phone": null,
+                        "mobile": null
+                    }
+                ],
+                "product_product": [
+                    {
+                        "default_code": "SE25-190417",
+                        "name": "ANGULAR 18 ET VERSIONS ANTÉRIEURES - DÉVELOPPEMENT D'APPLICATIONS WEB"
+                    }
+                ],
+                "uom_uom": [
+                    {
+                        "name": "Jour"
+                    }
+                ]
+            },
+            "refusal": null,
+            "annotations": []
+        },
+        "logprobs": null,
+        "finish_reason": "stop"
+    }
+]
