@@ -1,0 +1,15 @@
+{
+  "name": "n8n-code-node-forge",
+  "version": "1.0.0",
+  "description": "A Node.js project that simulates the n8n Code node runtime locally, allowing you to inject input data, inspect output results, and debug your code in VS Code with live-reload support.",
+  "license": "MIT",
+  "author": "Stéphane Ravet",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "n8n": "^1.93.0"
+  }
+}
