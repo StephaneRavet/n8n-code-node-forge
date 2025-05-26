@@ -23,58 +23,51 @@ const mainPath = path.join(__dirname, '../n8n-node/node-main.js');
 const outputPath = path.join(__dirname, '../n8n-node/node-output.jsonc');
 
 const inputRaw = fs.readFileSync(inputPath, 'utf8');
-const inputData = JSON.parse(stripJsonComments(inputRaw));
+let inputData = JSON.parse(stripJsonComments(inputRaw));
+// Support both { data: [...] } and [...] as input
+if (inputData && typeof inputData === 'object' && !Array.isArray(inputData) && Array.isArray(inputData.data)) {
+  inputData = inputData.data;
+}
 logInfo('n8n-node/node-input.jsonc loaded');
 const mainCode = fs.readFileSync(mainPath, 'utf8');
 logInfo('n8n-node/node-main.js loaded');
 
-// 2. Minimal mock for workflow and execution context
-const workflow = {
-  getNode: () => ({}),
-  getNodeConnectionIndexes: () => ({ sourceIndex: 0 }),
-  settings: {},
-  nodes: {},
-};
-const runExecutionData = {
-  resultData: {
-    runData: {},
-  },
-};
-const runIndex = 0;
-const itemIndex = 0;
-const activeNodeName = 'Code1'; // adapt if needed
-const connectionInputData = inputData;
-const siblingParameters = {};
-const mode = 'manual';
-const additionalKeys = {};
-const executeData = {};
-const defaultReturnRunIndex = -1;
+if (!Array.isArray(inputData) || inputData.length === 0 || !inputData[0]) {
+  logError('Input data is empty or malformed. $input.first() is undefined. Voici inputData :');
+  console.error(inputData);
+  process.exit(1);
+}
 
-const dataProxy = new WorkflowDataProxy(
-  workflow,
-  runExecutionData,
-  runIndex,
-  itemIndex,
-  activeNodeName,
-  connectionInputData,
-  siblingParameters,
-  mode,
-  additionalKeys,
-  executeData,
-  defaultReturnRunIndex
-);
-const context = dataProxy.getDataProxy();
+// 2. Prepare the sandbox with a local $input implementation
+function wrapItem(item) {
+  if (item && typeof item === 'object' && !Array.isArray(item)) {
+    return new Proxy(item, {
+      get(target, prop, receiver) {
+        if (prop === 'json') {
+          return target; // Ignore .json and return the item itself
+        }
+        return Reflect.get(target, prop, receiver);
+      },
+    });
+  }
+  return item;
+}
 
-// 3. Prepare the sandbox with the real $input
+const $input = {
+  all: () => inputData.map(wrapItem),
+  first: () => wrapItem(inputData[0]),
+  item: (index) => wrapItem(inputData[index]),
+};
+
 const sandbox = {
-  $input: context.$input,
+  $input,
   module: {},
   exports: {},
   console,
 };
 sandbox.global = sandbox;
 
-// 4. Execute the code in the context as a function
+// 3. Execute the code in the context as a function
 const wrappedCode = `
 function __userCode__() {
 ${mainCode}
@@ -97,6 +90,6 @@ try {
   }
 }
 
-// 5. Write the result to the output file
+// 4. Write the result to the output file
 fs.writeFileSync(outputPath, JSON.stringify(result, null, 2), 'utf8');
 logInfo('@node-output.jsonc updated. Look at it ! 👀'); 

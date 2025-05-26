@@ -2,7 +2,6 @@
   This script will be used in a Code node within an n8n workflow.
   The workflow objective is to: retrieve a sales order from an email attachment and inject it into the Odoo ERP.
 */
-
 const data = $input.first().json.message.content;
 
 function escapeForPG(str) {

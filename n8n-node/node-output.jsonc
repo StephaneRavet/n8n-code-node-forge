@@ -1,3 +1,7 @@
-{
-  "error": "Cannot read properties of undefined (reading 'message')"
-}
+[
+  {
+    "json": {
+      "query": "\nDO $$\nDECLARE\n  uom_rec RECORD;\n  uoms_json jsonb := '[{\"name\":\"Jour\"}]'::jsonb;\nBEGIN\n  -- 1) Unit of Measure: insert if not exists\n  FOR uom_rec IN\n    SELECT * FROM jsonb_to_recordset(uoms_json) AS(name text)\n  LOOP\n    IF NOT EXISTS (SELECT 1 FROM uom_uom WHERE name = uom_rec.name) THEN\n      INSERT INTO uom_uom(name) VALUES (uom_rec.name);\n    END IF;\n  END LOOP;\nEND\n$$;\n"
+    }
+  }
+]
